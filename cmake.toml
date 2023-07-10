@@ -1,8 +1,8 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
 [project]
-name = "cmkr_for_beginners"
+name = "llvm-msvc-seh-test"
 
-[target.hello_world]
+[target.test]
 type = "executable"
 sources = ["src/main.cpp"]
 compile-features = ["cxx_std_20"]
