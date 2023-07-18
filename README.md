@@ -1,6 +1,5 @@
 # llvm-msvc-seh-test
-
-SEH test for llvm-msvc
+SEH test for llvm-msvc.
 
 ## Requirements
 
