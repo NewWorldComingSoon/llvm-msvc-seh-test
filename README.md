@@ -12,6 +12,6 @@ SEH test for llvm-msvc
 ## Building with llvm-msvc
 
 ```
-cmake -Bbuild -TLLVM-MSVC_v143 -DCMAKE_WIN64_DRIVER=1
+cmake -Bbuild -TLLVM-MSVC_v143
 cmake --build build --config Release
 ```
