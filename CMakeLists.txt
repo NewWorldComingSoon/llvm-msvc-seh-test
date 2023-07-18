@@ -3,6 +3,10 @@
 
 cmake_minimum_required(VERSION 3.15)
 
+# Enable support for MSVC_RUNTIME_LIBRARY
+cmake_policy(SET CMP0091 NEW)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 	message(FATAL_ERROR "In-tree builds are not supported. Run CMake from a separate directory: cmake -B build")
 endif()
@@ -26,23 +30,46 @@ endif()
 
 project(llvm-msvc-seh-test)
 
-# Target: test
-set(test_SOURCES
+include(FetchContent)
+
+# Fix warnings about DOWNLOAD_EXTRACT_TIMESTAMP
+if(POLICY CMP0135)
+	cmake_policy(SET CMP0135 NEW)
+endif()
+message(STATUS "Fetching googletest (release-1.12.1)...")
+FetchContent_Declare(googletest SYSTEM
+	GIT_REPOSITORY
+		"https://github.com/google/googletest"
+	GIT_TAG
+		release-1.12.1
+)
+FetchContent_MakeAvailable(googletest)
+
+# Target: test_seh
+set(test_seh_SOURCES
 	"src/main.cpp"
 	cmake.toml
 )
 
-add_executable(test)
+add_executable(test_seh)
 
-target_sources(test PRIVATE ${test_SOURCES})
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${test_SOURCES})
+target_sources(test_seh PRIVATE ${test_seh_SOURCES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${test_seh_SOURCES})
 
-target_compile_features(test PRIVATE
+target_compile_features(test_seh PRIVATE
 	cxx_std_20
+)
+
+target_include_directories(test_seh PRIVATE
+	"googletest/googletest/include"
+)
+
+target_link_libraries(test_seh PRIVATE
+	gtest
 )
 
 get_directory_property(CMKR_VS_STARTUP_PROJECT DIRECTORY ${PROJECT_SOURCE_DIR} DEFINITION VS_STARTUP_PROJECT)
 if(NOT CMKR_VS_STARTUP_PROJECT)
-	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT test)
+	set_property(DIRECTORY ${PROJECT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT test_seh)
 endif()
 

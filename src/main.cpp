@@ -1,7 +1,8 @@
-#include <iostream>
+#include <gtest/gtest.h>
 
-int main()
+int
+main(int argc, char *argv[])
 {
-    std::cout << "Hello from cmkr!\n";
-    return 0;
+    testing::InitGoogleTest(&argc, const_cast<char **>(argv));
+    return RUN_ALL_TESTS();
 }

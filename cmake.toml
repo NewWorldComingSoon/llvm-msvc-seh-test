@@ -1,8 +1,15 @@
 # Reference: https://build-cpp.github.io/cmkr/cmake-toml
 [project]
 name = "llvm-msvc-seh-test"
+msvc-runtime = "static"
 
-[target.test]
+[fetch-content.googletest]
+git = "https://github.com/google/googletest"
+tag = "release-1.12.1"
+
+[target.test_seh]
 type = "executable"
 sources = ["src/main.cpp"]
+include-directories = ["googletest/googletest/include"]
+link-libraries = ["gtest"]
 compile-features = ["cxx_std_20"]
