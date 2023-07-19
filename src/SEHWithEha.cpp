@@ -4,3 +4,21 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+
+TEST(SEHWithEha, SEHWithEha_1)
+{
+    int value = 0;
+    try
+    {
+        value += 1;
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    catch (...)
+    {
+        value += 1;
+        printf("except!\n");
+    }
+
+    EXPECT_EQ(2, value);
+}
