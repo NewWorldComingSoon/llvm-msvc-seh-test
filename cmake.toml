@@ -9,7 +9,8 @@ tag = "v1.13.0"
 
 [target.test_seh]
 type = "executable"
-sources = ["src/main.cpp"]
+sources = ["src/**.cpp"]
 include-directories = ["googletest/googletest/include"]
 link-libraries = ["gtest"]
 compile-features = ["cxx_std_20"]
+compile-options = ["/EHa"]

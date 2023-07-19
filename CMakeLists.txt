@@ -47,6 +47,9 @@ FetchContent_MakeAvailable(googletest)
 
 # Target: test_seh
 set(test_seh_SOURCES
+	"src/CXXEH.cpp"
+	"src/SEH.cpp"
+	"src/SEHWithEha.cpp"
 	"src/main.cpp"
 	cmake.toml
 )
@@ -58,6 +61,10 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${test_seh_SOURCES})
 
 target_compile_features(test_seh PRIVATE
 	cxx_std_20
+)
+
+target_compile_options(test_seh PRIVATE
+	"/EHa"
 )
 
 target_include_directories(test_seh PRIVATE
