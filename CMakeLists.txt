@@ -65,6 +65,8 @@ target_compile_features(test_seh PRIVATE
 
 target_compile_options(test_seh PRIVATE
 	"/EHa"
+	-fauto-generate-ir
+	-fprint-arguments
 )
 
 target_include_directories(test_seh PRIVATE

@@ -74,3 +74,22 @@ TEST(SEH, SHE_2)
 
     EXPECT_EQ(5, value);
 }
+
+TEST(SEH, SHE_3)
+{
+    int value = 0;
+    __try
+    {
+        value += 1;
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    __except (1)
+    {
+        value += 1;
+        printf("except!\n");
+    }
+
+    EXPECT_EQ(2, value);
+}
+

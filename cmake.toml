@@ -13,4 +13,14 @@ sources = ["src/**.cpp"]
 include-directories = ["googletest/googletest/include"]
 link-libraries = ["gtest"]
 compile-features = ["cxx_std_20"]
-compile-options = ["/EHa"]
+compile-options = [
+"/EHa", 
+"-fauto-generate-ir", 
+"-fprint-arguments"
+]
+
+
+
+
+
+
