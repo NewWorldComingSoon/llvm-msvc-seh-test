@@ -36,12 +36,12 @@ include(FetchContent)
 if(POLICY CMP0135)
 	cmake_policy(SET CMP0135 NEW)
 endif()
-message(STATUS "Fetching googletest (release-1.12.1)...")
+message(STATUS "Fetching googletest (v1.13.0)...")
 FetchContent_Declare(googletest SYSTEM
 	GIT_REPOSITORY
 		"https://github.com/google/googletest"
 	GIT_TAG
-		release-1.12.1
+		v1.13.0
 )
 FetchContent_MakeAvailable(googletest)
 
