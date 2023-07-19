@@ -172,3 +172,39 @@ TEST(SEHWithEha, SEHWithEha_5)
     value += 1;
     EXPECT_EQ(8, value);
 }
+
+TEST(SEHWithEha, SEHWithEha_6)
+{
+    int value = 0;
+    __try
+    {
+        value += 1;
+        printf("try 1\n");
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    __except (1)
+    {
+        value += 1;
+        printf("except!\n");
+    }
+
+    value += 1;
+
+    __try
+    {
+        value += 1;
+        printf("try 2\n");
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    __except (1)
+    {
+        value += 1;
+        printf("except!\n");
+    }
+
+    value += 1;
+    EXPECT_EQ(6, value);
+}
+
