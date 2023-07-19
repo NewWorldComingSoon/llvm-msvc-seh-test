@@ -6,6 +6,32 @@
 #include <string>
 #include <vector>
 
+TEST(SEHWithEha, SEHWithEha_0)
+{
+    printf("except 00000 !\n");
+    int value = 0;
+    try
+    {
+        value += 1;
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    catch (...)
+    {
+        value += 1;
+        printf("except!\n");
+    }
+
+    if (value == 2)
+    {
+        printf("ok\n");
+    }
+    else
+    {
+        printf("failed\n");
+    }
+}
+
 TEST(SEHWithEha, SEHWithEha_1)
 {
     int value = 0;
@@ -207,4 +233,3 @@ TEST(SEHWithEha, SEHWithEha_6)
     value += 1;
     EXPECT_EQ(6, value);
 }
-
