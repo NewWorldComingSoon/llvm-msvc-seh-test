@@ -1,4 +1,7 @@
 {
     "cmake.configureOnOpen": true,
-    "workbench.startupEditor": "none"
+    "workbench.startupEditor": "none",
+    "files.associations": {
+        "xstring": "cpp"
+    }
 }
