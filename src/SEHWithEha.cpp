@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <vector>
 
 TEST(SEHWithEha, SEHWithEha_1)
 {
@@ -53,3 +54,28 @@ TEST(SEHWithEha, SEHWithEha_2)
     EXPECT_EQ(4, value);
 }
 
+TEST(SEHWithEha, SEHWithEha_3)
+{
+    int value = 0;
+    try
+    {
+        value += 1;
+        std::vector<int> a;
+        a.push_back(1);
+        a.push_back(2);
+        for (auto v : a)
+        {
+            printf("v:%d\n", v);
+        }
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    catch (...)
+    {
+        value += 1;
+        printf("except!\n");
+        EXPECT_EQ(2, value);
+        return;
+    }
+    printf("unreachable\n");
+}
