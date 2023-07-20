@@ -150,3 +150,35 @@ TEST(SEH, SEH_5)
 
     EXPECT_EQ(4, SEH_5_value);
 }
+
+//// https://github.com/llvm/llvm-project/issues/63706
+int SEH_6_value = 0;
+void
+SEH_6_run(int variable)
+{
+    __try
+    {
+        SEH_6_value += 1;
+        printf("3333\n");
+        RaiseException(0xE0000001, 0, 0, 0);
+    }
+
+    __except ([variable](unsigned int code, struct _EXCEPTION_POINTERS *ep) -> int {
+        int copy = variable;
+        printf("copy=%d\n", copy);
+        SEH_6_value += 1;
+        return EXCEPTION_EXECUTE_HANDLER;
+    }(GetExceptionCode(), GetExceptionInformation()))
+    {
+        SEH_6_value += 1;
+        printf("2222\n");
+    }
+    SEH_6_value += 1;
+}
+
+TEST(SEH, SEH_6)
+{
+    SEH_6_value += 1;
+    SEH_6_run(11);
+    EXPECT_EQ(5, SEH_6_value);
+}
