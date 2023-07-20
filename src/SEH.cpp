@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-TEST(SEH, SHE_1)
+TEST(SEH, SEH_1)
 {
     int value = 0;
 
@@ -40,7 +40,7 @@ TEST(SEH, SHE_1)
     EXPECT_EQ(5, value);
 }
 
-TEST(SEH, SHE_2)
+TEST(SEH, SEH_2)
 {
     int value = 0;
 
@@ -75,7 +75,7 @@ TEST(SEH, SHE_2)
     EXPECT_EQ(5, value);
 }
 
-TEST(SEH, SHE_3)
+TEST(SEH, SEH_3)
 {
     int value = 0;
     __try
@@ -93,7 +93,7 @@ TEST(SEH, SHE_3)
     EXPECT_EQ(2, value);
 }
 
-TEST(SEH, SHE_4)
+TEST(SEH, SEH_4)
 {
     int value = 0;
     __try
@@ -115,4 +115,38 @@ TEST(SEH, SHE_4)
     __debugbreak();
 }
 
+//// https://github.com/llvm/llvm-project/issues/54922
+int SEH_5_value = 0;
+__declspec(noinline) void SEH_5_do_nothing() {}
+__declspec(noinline) void SEH_5_test()
+{
+    __try
+    {
+        SEH_5_value += 1;
+        SEH_5_do_nothing();
+    }
+    __except (1)
+    {
+        SEH_5_value += 1;
+        printf("hello\n");
+    }
+    SEH_5_value += 1;
+    __debugbreak();
+    SEH_5_value += 1;
+}
 
+TEST(SEH, SEH_5)
+{
+    __try
+    {
+        SEH_5_value += 1;
+        SEH_5_test();
+    }
+    __except (1)
+    {
+        SEH_5_value += 1;
+        printf("world\n");
+    }
+
+    EXPECT_EQ(4, SEH_5_value);
+}
