@@ -65,3 +65,25 @@ TEST(CXXEH, CXXEH_2)
     std::string str = "34";
     CXXEH_2_tryParse(fmt, str);
 }
+
+void
+CXXEH_3_parse()
+{
+    throw std::exception("throw--------");
+    return;
+}
+
+TEST(CXXEH, CXXEH_3)
+{
+    try
+    {
+        CXXEH_3_parse();
+        return;
+    }
+    catch (const std::exception &e)
+    {
+        printf("except=%s\n", e.what());
+        EXPECT_STREQ("throw--------", e.what());
+        return;
+    }
+}
