@@ -93,3 +93,26 @@ TEST(SEH, SHE_3)
     EXPECT_EQ(2, value);
 }
 
+TEST(SEH, SHE_4)
+{
+    int value = 0;
+    __try
+    {
+        value += 1;
+        printf("try 1\n");
+        int *p = (int *)1;
+        *p = NULL;
+    }
+    __except (1)
+    {
+        value += 1;
+        printf("except!\n");
+        // seh的返回没有问题
+        EXPECT_EQ(2, value);
+        return;
+    }
+    printf("unreachable!\n");
+    __debugbreak();
+}
+
+
