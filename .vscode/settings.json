@@ -2,6 +2,8 @@
     "cmake.configureOnOpen": true,
     "workbench.startupEditor": "none",
     "files.associations": {
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "chrono": "cpp",
+        "format": "cpp"
     }
 }
