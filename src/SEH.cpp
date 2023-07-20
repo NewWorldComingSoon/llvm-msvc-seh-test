@@ -182,3 +182,40 @@ TEST(SEH, SEH_6)
     SEH_6_run(11);
     EXPECT_EQ(5, SEH_6_value);
 }
+
+int SEH_7_value = 0;
+
+DECLSPEC_NOINLINE
+int
+SEH_7_seh_filer(unsigned int code, int variable, int variable2)
+{
+    SEH_7_value += 1;
+    printf("code=%x\n", code);
+    printf("variable=%x\n", variable);
+    printf("variable2=%x\n", variable2);
+    if (code == 1)
+    {
+        return -1;
+    }
+    return 1;
+}
+
+TEST(SEH, SEH_7)
+{
+    SEH_7_value += 1;
+    __try
+    {
+        puts(" in try");
+
+        SEH_7_value += 1;
+        RaiseException(0xE0000001, 0, 0, 0);
+    }
+    __except (SEH_7_seh_filer(GetExceptionCode(), 3, 4))
+    {
+        SEH_7_value += 1;
+        puts(" in except");
+    }
+    SEH_7_value += 1;
+
+    EXPECT_EQ(5, SEH_7_value);
+}
