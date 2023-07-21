@@ -219,3 +219,36 @@ TEST(SEH, SEH_7)
 
     EXPECT_EQ(5, SEH_7_value);
 }
+
+int g_SEH_8_a = 0;
+int g_SEH_8_b = 3359;
+
+TEST(SEH, SEH_8)
+{
+    int value = 0;
+
+    int a = g_SEH_8_a, b = g_SEH_8_b;
+
+    if (a == 2)
+    {
+        puts(" in try");
+    }
+
+    __try
+    {
+        value += 1;
+        if (b == 4)
+        {
+            b = 5;
+        }
+        else
+        {
+        }
+        value += 1;
+    }
+    __except (1)
+    {
+    }
+    value += 1;
+    EXPECT_EQ(3, value);
+}
