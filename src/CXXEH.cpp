@@ -87,3 +87,43 @@ TEST(CXXEH, CXXEH_3)
         return;
     }
 }
+
+int CXXEH_4_value = 0;
+void
+CXXEH_4_Foo()
+{
+    static bool b;
+    if (!b)
+    {
+        printf("Foo 1st time\n");
+        b = true;
+    }
+    CXXEH_4_value += 1;
+    printf("Alloca: %p\n", alloca(4));
+    try
+    {
+        CXXEH_4_value += 1;
+        throw 3;
+    }
+    catch (int e)
+    {
+        throw e;
+    }
+}
+
+TEST(CXXEH, CXXEH_4)
+{
+    try
+    {
+        CXXEH_4_value += 1;
+        CXXEH_4_Foo();
+        printf("FOO\n");
+    }
+    catch (int e)
+    {
+        CXXEH_4_value += 1;
+        printf("EXN\n");
+    }
+
+    EXPECT_EQ(4, CXXEH_4_value);
+}
