@@ -233,3 +233,40 @@ TEST(SEHWithEha, SEHWithEha_6)
     value += 1;
     EXPECT_EQ(6, value);
 }
+
+//// https://github.com/llvm/llvm-project/issues/54922
+int SEHWithEha_7_value = 0;
+__declspec(noinline) void SEHWithEha_7_do_nothing() {}
+__declspec(noinline) void SEHWithEha_7_test()
+{
+    try
+    {
+        SEHWithEha_7_value += 1;
+        SEHWithEha_7_do_nothing();
+    }
+    catch (...)
+    {
+        SEHWithEha_7_value += 1;
+        printf("hello\n");
+    }
+    SEHWithEha_7_value += 1;
+    int *p = (int *)1;
+    *p = 2;
+    SEHWithEha_7_value += 1;
+}
+
+TEST(SEHWithEha, SEHWithEha_7)
+{
+    try
+    {
+        SEHWithEha_7_value += 1;
+        SEHWithEha_7_test();
+    }
+    catch (...)
+    {
+        SEHWithEha_7_value += 1;
+        printf("world\n");
+    }
+
+    EXPECT_EQ(4, SEHWithEha_7_value);
+}
