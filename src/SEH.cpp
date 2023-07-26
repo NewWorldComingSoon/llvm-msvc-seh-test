@@ -252,3 +252,86 @@ TEST(SEH, SEH_8)
     value += 1;
     EXPECT_EQ(3, value);
 }
+
+int g_SEH_9 = 0;
+
+int
+SEH_9_nested___finally___finally_with_eh_edge(void)
+{
+    __try
+    {
+        __try
+        {
+            g_SEH_9 += 1;
+            printf("123\n");
+        }
+        __finally
+        {
+            printf("456\n");
+            g_SEH_9 += 1;
+            return 899;
+        }
+    }
+    __finally
+    {
+        g_SEH_9 += 1;
+        // Intentionally no return here.
+        printf("11111\n");
+    }
+
+    printf("789\n");
+    g_SEH_9 += 1;
+    return 912;
+}
+
+TEST(SEH, SEH_9)
+{
+    int x = SEH_9_nested___finally___finally_with_eh_edge();
+    printf("x=%d\n", x);
+
+    EXPECT_EQ(3, g_SEH_9);
+}
+
+int g_SEH_10 = 0;
+void
+f1()
+{
+    g_SEH_10 += 1;
+    printf("f1\n");
+}
+void
+f2()
+{
+    g_SEH_10 += 1;
+    printf("f2\n");
+}
+
+void
+f3()
+{
+    g_SEH_10 += 1;
+    printf("f3\n");
+}
+
+void
+f(int z)
+{
+    __try
+    {
+        f1();
+    }
+    __finally
+    {
+        f2();
+        if (z)
+            return;
+        f3();
+    }
+}
+
+TEST(SEH, SEH_10)
+{
+    f(2);
+
+    EXPECT_EQ(2, g_SEH_10);
+}
