@@ -270,3 +270,78 @@ TEST(SEHWithEha, SEHWithEha_7)
 
     EXPECT_EQ(4, SEHWithEha_7_value);
 }
+
+// https://github.com/llvm/llvm-project/issues/62723
+int SEHWithEha_8_value = 0;
+int volatile *NullPtr = 0;
+DECLSPEC_NOINLINE
+void
+SEHWithEha_8foo()
+{
+    SEHWithEha_8_value += 1;
+    printf("foo\n");
+}
+
+DECLSPEC_NOINLINE
+void
+SEHWithEha_8bar()
+{
+    SEHWithEha_8_value += 1;
+    printf("bar\n");
+}
+
+void
+SEHWithEha_8baz()
+{
+    try
+    {
+        try
+        {
+        }
+        catch (...)
+        {
+            SEHWithEha_8_value += 1;
+            SEHWithEha_8foo();
+            *NullPtr = 1;
+        }
+        *NullPtr = 0;
+    }
+    catch (...)
+    {
+        SEHWithEha_8_value += 1;
+        SEHWithEha_8bar();
+    }
+}
+
+void
+SEHWithEha_8baz2()
+{
+    try
+    {
+        try
+        {
+            SEHWithEha_8_value += 1;
+            *NullPtr = 0;
+        }
+        catch (...)
+        {
+            SEHWithEha_8_value += 1;
+            SEHWithEha_8foo();
+            *NullPtr = 1;
+            SEHWithEha_8_value += 1;
+        }
+    }
+    catch (...)
+    {
+        SEHWithEha_8bar();
+    }
+}
+
+TEST(SEHWithEha, SEHWithEha_8)
+{
+    printf("baz-------------\n");
+    SEHWithEha_8baz();
+    printf("baz2-------------\n");
+    SEHWithEha_8baz2();
+    EXPECT_EQ(6, SEHWithEha_8_value);
+}
