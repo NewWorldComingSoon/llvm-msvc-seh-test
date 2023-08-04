@@ -187,7 +187,7 @@ int SEH_7_value = 0;
 
 DECLSPEC_NOINLINE
 int
-SEH_7_seh_filer(unsigned int code, int variable, int variable2)
+SEH_7_seh_filter(unsigned int code, int variable, int variable2)
 {
     SEH_7_value += 1;
     printf("code=%x\n", code);
@@ -210,7 +210,7 @@ TEST(SEH, SEH_7)
         SEH_7_value += 1;
         RaiseException(0xE0000001, 0, 0, 0);
     }
-    __except (SEH_7_seh_filer(GetExceptionCode(), 3, 4))
+    __except (SEH_7_seh_filter(GetExceptionCode(), 3, 4))
     {
         SEH_7_value += 1;
         puts(" in except");
