@@ -127,3 +127,60 @@ TEST(CXXEH, CXXEH_4)
 
     EXPECT_EQ(4, CXXEH_4_value);
 }
+
+struct A
+{
+};
+struct B : virtual A
+{
+};
+struct C : virtual A
+{
+};
+struct D : virtual A
+{
+};
+struct E : private B, public C, private D
+{
+};
+
+extern "C" void
+abort();
+
+int CXXEH_5_value = 0;
+void
+fne(E *e)
+{
+    CXXEH_5_value += 1;
+    throw e;
+}
+
+void
+check(E *e)
+{
+    try
+    {
+        CXXEH_5_value += 1;
+        fne(e);
+    }
+    catch (A *p)
+    {
+        CXXEH_5_value += 1;
+        std::cout << "caught" << std::endl;
+    }
+    catch (...)
+    {
+        CXXEH_5_value += 1;
+        std::cout << "catch(...) abort" << std::endl;
+        abort();
+    }
+    return;
+}
+
+TEST(CXXEH, CXXEH_5)
+{
+    E e;
+    check((E *)0);
+
+    EXPECT_EQ(3, CXXEH_5_value);
+}
