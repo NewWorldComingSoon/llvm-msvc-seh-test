@@ -131,7 +131,8 @@ __declspec(noinline) void SEH_5_test()
         printf("hello\n");
     }
     SEH_5_value += 1;
-    __debugbreak();
+    int *p = (int *)1;
+    *p = 1;
     SEH_5_value += 1;
 }
 
