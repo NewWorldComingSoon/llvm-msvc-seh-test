@@ -250,8 +250,10 @@ __declspec(noinline) void SEHWithEha_7_test()
         printf("hello\n");
     }
     SEHWithEha_7_value += 1;
+    __debugbreak();
     int *p = (int *)1;
     *p = 2;
+    __debugbreak();
     SEHWithEha_7_value += 1;
 }
 
