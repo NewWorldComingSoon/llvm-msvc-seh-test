@@ -34,7 +34,7 @@ jobs:
       if: ${{ startsWith(github.ref, 'refs/tags/') }}
       with:
         files: |
-         build/Release/*.*
+         build/Release
         dest: ${{ github.event.repository.name }}-${{ github.sha }}-64.zip
 
     - name: Release
