@@ -336,3 +336,42 @@ TEST(SEH, SEH_10)
 
     EXPECT_EQ(2, g_SEH_10);
 }
+
+int g_SEH_11 = 0;
+int
+SEH_11_myadd(int a, int b)
+{
+    int ret = 0;
+
+    __try
+    {
+        g_SEH_11 += 1;
+
+        __debugbreak();
+    }
+    __except (1)
+    {
+        if (a < b)
+        {
+            ret = a + b + 3;
+        }
+        else if (a > 4)
+        {
+            ret = a - b + 8;
+        }
+        else
+        {
+            g_SEH_11 += 1;
+            ret = a - b + 4;
+        }
+    }
+
+    return ret;
+}
+
+TEST(SEH, SEH_11)
+{
+    SEH_11_myadd(-1, -2);
+
+    EXPECT_EQ(2, g_SEH_11);
+}
